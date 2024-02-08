@@ -96,20 +96,23 @@ services:
                     -Dgeonetwork.dir=/catalogue-data
                     -Dgeonetwork.formatter.dir=/catalogue-data/data/formatter
                     -Dgeonetwork.schema.dir=/catalogue-data/config/schema_plugins
-                    -Dgeonetwork.indexConfig.dir=/catalogue/data/config/index                       -Dgeonetwork.schemapublication.dir=/catalogue-data/resources/schemapublication
+                    -Dgeonetwork.indexConfig.dir=/catalogue/data/config/index                       
+                    -Dgeonetwork.schemapublication.dir=/catalogue-data/data/resources/schemapublication
                     -Dgeonetwork.htmlcache.dir=/catalogue-data/data/resources/htmlcache
                     -Des.host=elasticsearch
                     -Des.protocol=http
                     -Des.port=9200
                     -Des.url=http://elasticsearch:9200
-                    -Des.username=
-                    -Des.password=
+                    -Des.username=elasticsearch
+                    -Des.password=elasticsearch
+                    -Dkb.url=http://kibana:5601
                     -Dgeonetwork.ESFeaturesProxy.targetUri=http://elasticsearch:9200/gn-features/{_}
                     -Dgeonetwork.HttpDashboardProxy.targetUri=http://kibana:5601
                     -Dgeonetwork.MicroServicesProxy.targetUri=http://ogc-api-records-service:8080
 
       GEONETWORK_DB_TYPE: postgres
       GEONETWORK_DB_HOST: database
+      KB_URL: http://kibana:5601
       GEONETWORK_DB_PORT: 5432
       GEONETWORK_DB_NAME: geonetwork
       GEONETWORK_DB_USERNAME: geonetwork
