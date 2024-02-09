@@ -89,6 +89,8 @@ services:
       JAVA_OPTS: >-
                     --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED
                     -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true
+                    -Djavax.net.ssl.trustStore=/opt/java/openjdk/lib/security/cacerts 
+                    -Djavax.net.ssl.trustStorePassword=changeit
                     -Xms512M -Xss512M -Xmx2G -XX:+UseConcMarkSweepGC
                     -Djetty.httpConfig.requestHeaderSize=32768
                     -Dorg.eclipse.jetty.server.Request.maxFormContentSize=500000
