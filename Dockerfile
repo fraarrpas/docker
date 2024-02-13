@@ -27,6 +27,8 @@ RUN  mkdir -p geonetwork && \
      unzip -e /tmp/$GN_FILE -d geonetwork && \
      rm /tmp/$GN_FILE
 
+COPY custom/ $CATALINA_HOME/webapps/geonetwork/ 
+
 #Set geonetwork data dir
 COPY ./docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
