@@ -1,0 +1,80 @@
+{
+  "mods": {
+    "header": {
+      "enabled": true,
+      "isLogoInHeader": true,
+      "logoInHeaderPosition": "left",
+      "fluidHeaderLayout": true,
+      "showGNName": true,
+      "isHeaderFixed": true,
+      "languages": {
+        "eng": "en",
+        "spa": "es"
+      }
+    },
+    "home": {
+      "showMosaic": false,
+      "showMaps": false,
+      "facetConfig": {
+        "th_httpinspireeceuropaeutheme-theme_tree.key": {
+          "terms": {
+            "field": "th_httpinspireeceuropaeutheme-theme_tree.key",
+            "size": 34
+          },
+          "meta": {
+            "decorator": {
+              "type": "icon",
+              "prefix": "fa fa-2x pull-left gn-icon iti-",
+              "expression": "http://inspire.ec.europa.eu/theme/(.*)"
+            }
+          }
+        },
+        "cl_topic.key": {
+          "terms": {
+            "field": "cl_topic.key",
+            "size": 20
+          },
+          "meta": {
+            "decorator": {
+              "type": "icon",
+              "prefix": "fa fa-2x pull-left gn-icon-"
+            }
+          }
+        },
+        "resourceType": {
+          "terms": {
+            "field": "resourceType",
+            "size": 10
+          },
+          "meta": {
+            "decorator": {
+              "type": "icon",
+              "prefix": "fa fa-2x pull-left gn-icon-"
+            }
+          }
+        }
+      },
+      "fluidLayout": true
+    },
+    "footer": {
+      "footerCustomMenu": [
+        "https://portalrediam.cica.es/geonetwork/srv/spa/catalog.search#/home",
+        null
+      ]
+    },
+    "map": {
+      "enabled": false,
+      "externalViewer": {
+        "enabled": false,
+        "enabledViewAction": false,
+        "baseUrl": "http://www.example.com/viewer",
+        "urlTemplate": "http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.title}&lang=${iso2lang}&title=${md.defaultTitle}",
+        "openNewWindow": false,
+        "valuesSeparator": ","
+      }
+    },
+    "search": {
+      "searchMapPlacement": ""
+    }
+  }
+}
