@@ -61,7 +61,7 @@ services:
       args:
         #parametro para establecer logotipo del entorno en la interfaz
         #integracion, pruebas o produccion
-        - entorno: integracion
+        entorno: integracion
     healthcheck:
       test: "curl http://localhost:8080/"
       interval: 5s

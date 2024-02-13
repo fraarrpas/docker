@@ -34,12 +34,12 @@ COPY custom/ $CATALINA_HOME/webapps/geonetwork/
 
 # Comprobacion de entorno para copia de logo
 RUN if [ "$entorno" = "integracion" ]; then \
-    mv $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_INT.png $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam.png; \
-  else if [ "$entorno" = "pruebas" ]; then \
-      mv $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_PRU.png $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam.png; \
+    mv $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_INT.png $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam.png && \
+    rm $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_PRU.png; \
+  elif [ "$entorno" = "pruebas" ]; then \
+      mv $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_PRU.png $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam.png && \
+      rm $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_INT.png; \
   fi
-
-RUN rm $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_PRU.png $CATALINA_HOME/webapps/geonetwork/catalog/views/default/images/logo_rediam_INT.png
 
 # Tomcat EntryPoint
 COPY ./docker-entrypoint.sh /entrypoint.sh
