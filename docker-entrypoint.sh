@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 export JAVA_OPTIONS="${JAVA_OPTS} ${GN_CONFIG_PROPERTIES}"
 
 if [ "$1" = 'catalina.sh' ]; then

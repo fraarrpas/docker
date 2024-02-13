@@ -5,7 +5,6 @@ services:
     image: "traefik:v2.10"
     container_name: "traefik"
     command:
-#      - "--log.level=DEBUG"
       - "--log.filePath=/logs/traefik.log"
       - "--accesslog=true"
       - "--accesslog.bufferingsize=50"
@@ -20,11 +19,9 @@ services:
       - "5432:5432"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-        #- /home/fran/geonetwork/data/traefiklog:/logs
       - traefiklog:/logs
     networks:
       - gn-network
-
 
   database:
     image: postgis/postgis:16-3.4
@@ -51,11 +48,8 @@ services:
             - "traefik.http.services.database.loadbalancer.server.port=5432"
             - "traefik.http.routers.database.service=database"
     volumes:
-            #  - /home/fran/geonetwork/data/pgdata:/var/lib/postgresql/data
-            #      - /home/fran/geonetwork/data/pglog:/var/log/postgresql
-     
-      - pgdata16:/var/lib/postgresql/data
-      - pglog16:/var/log/postgresql
+      - pgdata:/var/lib/postgresql/data
+      - pglog:/var/log/postgresql
     restart: always
     networks:
       - gn-network
@@ -64,6 +58,10 @@ services:
     image: geoinspire:3.0.0
     build:
       dockerfile: ./Dockerfile
+      args:
+        #parametro para establecer logotipo del entorno en la interfaz
+        #integracion, pruebas o produccion
+        - entorno: integracion
     healthcheck:
       test: "curl http://localhost:8080/"
       interval: 5s
@@ -84,7 +82,6 @@ services:
     restart: always
         
     volumes:
-            # - /home/fran/geonetwork/data/gndata:/catalogue-data
             - gndata:/catalogue-data
             - tomcatlog:/usr/local/tomcat/logs
     depends_on:
@@ -158,7 +155,6 @@ services:
     networks:
       - gn-network
 
-
   elasticsearch:
     image: elasticsearch:7.17.10
     ports:
@@ -179,8 +175,6 @@ services:
       ES_JAVA_OPTS: "-Xms1G -Xmx1G"
       discovery.type: single-node
     volumes:
-            #- /home/fran/geonetwork/data/esdata:/usr/share/elasticsearch/data
-            #      - /home/fran/geonetwork/data/esconfig:/usr/share/elasticsearch/config
       - esdata:/usr/share/elasticsearch/data
       - esconfig:/usr/share/elasticsearch/config
     networks:
@@ -199,8 +193,6 @@ services:
       elasticsearch:
         condition: service_healthy
     volumes:
-            #- /home/fran/geonetwork/data/kbdata:/usr/share/kibana/data
-            #      - /home/fran/geonetwork/data/kbconfig:/usr/share/kibana/config
       - kbdata:/usr/share/kibana/data
       - kbconfig:/usr/share/kibana/config
     networks:
@@ -208,14 +200,59 @@ services:
 
 volumes:
   gndata:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
   esdata:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
   esconfig:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
   kbdata:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
   kbconfig:
-  pgdata16:
-  pglog16:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
+  pgdata:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
+  pglog:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
   traefiklog:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
   tomcatlog:
+    #driver: local
+    #driver_opts:
+    #  type: none
+    #  o: bind
+    #  device: /home/user/test
 
 networks:
   gn-network:
