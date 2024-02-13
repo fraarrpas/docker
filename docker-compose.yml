@@ -17,6 +17,7 @@ services:
     ports:
       - "80:80"
       - "8000:8080"
+      - "5432:5432"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
         #- /home/fran/geonetwork/data/traefiklog:/logs
@@ -26,7 +27,7 @@ services:
 
 
   database:
-    image: postgis/postgis:11-2.5
+    image: postgis/postgis:16-3.4
     environment:
       POSTGRES_USER: geonetwork
       POSTGRES_PASSWORD: geonetwork
@@ -42,12 +43,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    labels:        
+            - "traefik.enable=true"
+            - "traefik.http.routers.database.rule=HostSNI(`*`)"
+            - "traefik.http.routers.database.entrypoints=postgres"
+            - "traefik.http.routers.database.tls=false"
+            - "traefik.http.services.database.loadbalancer.server.port=5432"
+            - "traefik.http.routers.database.service=database"
     volumes:
             #  - /home/fran/geonetwork/data/pgdata:/var/lib/postgresql/data
             #      - /home/fran/geonetwork/data/pglog:/var/log/postgresql
      
-      - pgdata:/var/lib/postgresql/data
-      - pglog:/var/log/postgresql
+      - pgdata16:/var/lib/postgresql/data
+      - pglog16:/var/log/postgresql
+    restart: always
     networks:
       - gn-network
 
@@ -77,6 +86,7 @@ services:
     volumes:
             # - /home/fran/geonetwork/data/gndata:/catalogue-data
             - gndata:/catalogue-data
+            - tomcatlog:/usr/local/tomcat/logs
     depends_on:
       database:
         condition: service_healthy
@@ -111,7 +121,7 @@ services:
                     -Dgeonetwork.ESFeaturesProxy.targetUri=http://elasticsearch:9200/gn-features/{_}
                     -Dgeonetwork.HttpDashboardProxy.targetUri=http://kibana:5601
                     -Dgeonetwork.MicroServicesProxy.targetUri=http://ogc-api-records-service:8080
-
+                    -Dlog_dir=/usr/local/tomcat/logs
       GEONETWORK_DB_TYPE: postgres
       GEONETWORK_DB_HOST: database
       KB_URL: http://kibana:5601
@@ -202,9 +212,10 @@ volumes:
   esconfig:
   kbdata:
   kbconfig:
-  pgdata:
-  pglog:
+  pgdata16:
+  pglog16:
   traefiklog:
+  tomcatlog:
 
 networks:
   gn-network:

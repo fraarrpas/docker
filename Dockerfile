@@ -6,13 +6,11 @@ ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true 
 
 #Environment variables
 ENV GN_VERSION 4.4.1
-#ENV GN_DOWNLOAD_MD5 0d05c65aa4ac67fea90fa74f947822d6
 
-
-RUN </dev/null openssl s_client -connect ideandalucia.es:443 -servername ideandalucia  | openssl x509 > /tmp/ideandalucia.crt
+RUN </dev/null openssl s_client -connect www.ideandalucia.es:443 -servername ideandalucia  | openssl x509 > /tmp/ideandalucia.crt
 
 RUN cd $JAVA_HOME/lib/security && \ 
-	keytool -keystore cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias idea -file /tmp/ideandalucia.crt
+	keytool -keystore cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias ideandalucia -file /tmp/ideandalucia.crt
 
 
 WORKDIR $CATALINA_HOME/webapps
