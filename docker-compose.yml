@@ -172,7 +172,6 @@ services:
       timeout: 2s
       retries: 10
     environment:
-      ES_JAVA_OPTS: ${ES_JAVA_OPTS}
       discovery.type: single-node
     volumes:
       - esdata:/usr/share/elasticsearch/data
