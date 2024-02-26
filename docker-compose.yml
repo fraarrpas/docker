@@ -13,10 +13,10 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "8000:8080"
-      - "5432:5432"
+    #ports:
+    #  - "80:80"
+    #  - "8000:8080"
+    #  - "5432:5432"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - traefiklog:/logs
@@ -28,7 +28,7 @@ services:
     environment:
       POSTGRES_USER: geonetwork
       POSTGRES_PASSWORD: geonetwork
-      POSTGRES_DB: geonetwork
+      POSTGRES_DB: geoinspirecatmg
     command: [ "postgres",
                "-c", "log_statement=all",
                "-c", "logging_collector=true",
@@ -51,6 +51,8 @@ services:
       - pgdata:/var/lib/postgresql/data
       - pglog:/var/log/postgresql
     restart: always
+    ports: 
+      - ${DP_PORT}:5432
     networks:
       - gn-network
 
@@ -61,7 +63,7 @@ services:
       args:
         #parametro para establecer logotipo del entorno en la interfaz
         #integracion, pruebas o produccion
-        entorno: integracion
+        entorno: ${ENTORNO}
     healthcheck:
       test: "curl http://localhost:8080/"
       interval: 5s
@@ -123,22 +125,22 @@ services:
       GEONETWORK_DB_HOST: database
       KB_URL: http://kibana:5601
       GEONETWORK_DB_PORT: 5432
-      GEONETWORK_DB_NAME: geonetwork
-      GEONETWORK_DB_USERNAME: geonetwork
-      GEONETWORK_DB_PASSWORD: geonetwork
+      GEONETWORK_DB_NAME: ${DB_NAME}
+      GEONETWORK_DB_USERNAME: ${DB_USER}
+      GEONETWORK_DB_PASSWORD: ${DB_PASS}
       HARVESTER_SCHEDULER_ENABLED: "true"
       HARVESTER_REFRESH_INTERVAL_MINUTES: 2
       VIRTUAL_HOST: localhost
     ports:
-              - 8080:8080
+              - ${TOMCAT_PORT}:8080
 
   ogc-api-records-service:
     image: geonetwork/gn-cloud-ogc-api-records-service:4.2.5-1
     environment:
       SPRING_PROFILES_ACTIVE: standalone
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/geonetwork
-      SPRING_DATASOURCE_USERNAME: geonetwork
-      SPRING_DATASOURCE_PASSWORD: geonetwork
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/geoinspirecatmg
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       GN_BASEURL: http://geonetwork.localhost/geonetwork/api
       GN_LEGACY_URL: http://geonetwork.localhost/geonetwork
       GN_INDEX_URL: http://elasticsearch:9200
@@ -157,8 +159,6 @@ services:
 
   elasticsearch:
     image: elasticsearch:7.17.10
-    ports:
-      - 9200:9200
     ulimits:
       memlock:
         soft: -1
@@ -172,7 +172,7 @@ services:
       timeout: 2s
       retries: 10
     environment:
-      ES_JAVA_OPTS: "-Xms1G -Xmx1G"
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS}
       discovery.type: single-node
     volumes:
       - esdata:/usr/share/elasticsearch/data
@@ -185,7 +185,7 @@ services:
     environment:
       SERVER_NAME: 'kibana'
       ELASTICSEARCH_URL: http://elasticsearch:9200/
-      SERVER_BASEPATH: /geonetwork/dashboards
+      SERVER_BASEPATH: /${GN_DIR}/dashboards
       SERVER_REWRITEBASEPATH: 'false'
       KIBANA_INDEX: .dashboards
       XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED: 'true'
