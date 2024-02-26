@@ -26,9 +26,9 @@ services:
   database:
     image: postgis/postgis:16-3.4
     environment:
-      POSTGRES_USER: geonetwork
-      POSTGRES_PASSWORD: geonetwork
-      POSTGRES_DB: geoinspirecatmg
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     command: [ "postgres",
                "-c", "log_statement=all",
                "-c", "logging_collector=true",
