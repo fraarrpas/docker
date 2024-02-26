@@ -52,7 +52,7 @@ services:
       - pglog:/var/log/postgresql
     restart: always
     ports: 
-      - ${DP_PORT}:5432
+      - ${DB_PORT}:5432
     networks:
       - gn-network
 
