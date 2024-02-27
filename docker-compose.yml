@@ -61,9 +61,9 @@ services:
     build:
       dockerfile: ./Dockerfile
       args:
-        #parametro para establecer logotipo del entorno en la interfaz
-        #integracion, pruebas o produccion
-        entorno: ${ENTORNO}
+        ENTORNO: ${ENTORNO}
+        GN_FILE: ${GN_FILE}
+        GN_DIR: ${GN_DIR}
     healthcheck:
       test: "curl http://localhost:8080/"
       interval: 5s
@@ -72,8 +72,8 @@ services:
     labels:
             - "traefik.enable=true"
             - "traefik.http.routers.geonetwork.middlewares=root-redirect"
-            - "traefik.http.middlewares.root-redirect.replacepathregex.regex=^/$$"
-            - "traefik.http.middlewares.root-redirect.replacepathregex.replacement=/geonetwork/"
+              # - "traefik.http.middlewares.root-redirect.replacepathregex.regex=^/$$"
+              # - "traefik.http.middlewares.root-redirect.replacepathregex.replacement=/geonetwork/"
             - "traefik.http.routers.geonetwork.rule=Host(`geonetwork.localhost`)"
             - "traefik.http.routers.geonetwork.entrypoints=web"
             - "traefik.http.services.geonetwork.loadbalancer.server.port=8080"
@@ -92,7 +92,7 @@ services:
     networks:
            - gn-network
     environment:
-      WEBAPP_CONTEXT_PATH: /geonetwork
+      WEBAPP_CONTEXT_PATH: /$GN_DIR
       DATA_DIR: /catalogue-data
       TZ: Europe/Madrid
       JAVA_OPTS: >-

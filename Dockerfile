@@ -1,5 +1,13 @@
 FROM tomcat:9.0.85-jdk11-temurin
 
+# Args
+ARG GN_DIR
+ENV GN_DIR $GN_DIR
+ARG GN_FILE
+ENV GN_FILE $GN_FILE
+ARG ENTORNO
+ENV ENTORNO $ENTORNO
+
 # Java Certs IDE de Andalucia,Junta de Andalucia
 RUN </dev/null openssl s_client -connect www.ideandalucia.es:443 -servername ideandalucia  | openssl x509 > /tmp/ideandalucia.crt
 RUN </dev/null openssl s_client -connect www.juntadeandalucia.es:443 -servername juntadeandalucia  | openssl x509 > /tmp/juntadeandalucia.crt
@@ -27,10 +35,10 @@ RUN  mkdir -p $GN_DIR && \
 COPY custom/ $CATALINA_HOME/webapps/$GN_DIR/ 
 
 # Comprobacion de entorno para copia de logo
-RUN if [ "$entorno" = "integracion" ]; then \
+RUN if [ "$ENTORNO" = "integracion" ]; then \
     mv $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_INT.png $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam.png && \
     rm $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_PRU.png; \
-  elif [ "$entorno" = "pruebas" ]; then \
+  elif [ "$ENTORNO" = "pruebas" ]; then \
       mv $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_PRU.png $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam.png && \
       rm $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_INT.png; \
   fi
