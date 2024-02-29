@@ -18,8 +18,7 @@ RUN cd $JAVA_HOME/lib/security && \
 RUN cd $JAVA_HOME/lib/security && \ 
 	keytool -keystore cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias juntadeandalucia -file /tmp/juntadeandalucia.crt
 
-# Geonetwork deploy
-WORKDIR $CATALINA_HOME/webapps
+WORKDIR /
 
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
@@ -32,15 +31,16 @@ RUN  mkdir -p $GN_DIR && \
      unzip -e /tmp/$GN_FILE -d $GN_DIR && \
      rm /tmp/$GN_FILE
 
-COPY custom/ $CATALINA_HOME/webapps/$GN_DIR/ 
+COPY custom/ $GN_DIR/ 
+COPY medioambiente#geoinspire.xml $CATALINA_HOME/conf/Catalina/localhost/
 
 # Comprobacion de entorno para copia de logo
 RUN if [ "$ENTORNO" = "integracion" ]; then \
-    mv $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_INT.png $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam.png && \
-    rm $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_PRU.png; \
+    mv $GN_DIR/catalog/views/default/images/logo_rediam_INT.png $GN_DIR/catalog/views/default/images/logo_rediam.png && \
+    rm $GN_DIR/catalog/views/default/images/logo_rediam_PRU.png; \
   elif [ "$ENTORNO" = "pruebas" ]; then \
-      mv $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_PRU.png $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam.png && \
-      rm $CATALINA_HOME/webapps/$GN_DIR/catalog/views/default/images/logo_rediam_INT.png; \
+      mv $GN_DIR/catalog/views/default/images/logo_rediam_PRU.png $GN_DIR/catalog/views/default/images/logo_rediam.png && \
+      rm $GN_DIR/catalog/views/default/images/logo_rediam_INT.png; \
   fi
 
 # Tomcat EntryPoint
